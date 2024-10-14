@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Countdown</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #countdown {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        #message {
+            font-size: 1.2em;
+            color: #994ae7;
+            display: none;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 4em;
+            color: #ff69b4;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px #ffe4e1;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: white;
+        }
+
+        img {
+            max-width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: transparent;
+            display: block;
+        }
+
+        #play-button, #click-button {
+            background: linear-gradient(135deg, rgba(128, 0, 128, 0.643), rgba(186, 85, 211, 1));
+            border: none;
+            padding: 20px 40px;
+            color: white;
+            font-size: 1.5em;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            animation: popUp 0.5s ease-in-out;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @keyframes popUp {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        #password-input {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 1em;
+            display: none;
+            border-radius: 19px;
+        }
+
+        #submit-password {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #e74797c6;
+            color: white;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            display: none;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="click-button">Touch me</button>
+
+    <div id="countdown"></div>
+
+    <div id="message">It's not your birthday yet, Roshino. Go touch some grass in the meantime...</div>
+
+    <input type="password" id="password-input" placeholder="Bypass Password">
+    <button id="submit-password">Submit</button>
+
+    <audio id="countdown-music" autoplay loop>
+        <source src="/startscreen.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        var targetDate = new Date('October 15, 2024 10:00:00').getTime();
+
+        document.getElementById('click-button').addEventListener('click', function() {
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('password-input').style.display = 'block';
+            document.getElementById('submit-password').style.display = 'block';
+
+            countdownTimer = setInterval(function() {
+                var now = new Date().getTime();
+                var timeRemaining = targetDate - now;
+
+                var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').innerHTML =
+                    days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+                if (timeRemaining < 0) {
+                    clearInterval(countdownTimer);
+                    document.getElementById('countdown').innerHTML = "Happy Birthday!";
+                    
+                    setTimeout(function() {
+                        showBirthdayPage();
+                    }, 1000);
+                }
+            }, 1000);
+
+            document.getElementById('countdown-music').play();
+            this.style.display = 'none';
+        });
+
+        function showBirthdayPage() {
+            document.body.innerHTML = `
+                <h1>Happy Birthday ames jus roshino!</h1>
+                <p>No more Brain Rot after 20 pls</p>
+                <p>college hoe says happy 20's </p>
+                <img src="roshini.png" alt="Birthday Image" id="birthday-image">
+                <button id="play-button">"Touch Me Again"</button>
+                <audio id="background-music" loop>
+                    <source src="rosh2_music.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            `;
+
+            document.getElementById('play-button').addEventListener('click', function() {
+                startConfetti();
+                document.getElementById('background-music').play();
+                this.style.display = 'none';
+            });
+        }
+
+        function startConfetti() {
+            var duration = 20 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        const passwordArray = [112, 117, 115, 115, 121];
+
+        function getPassword() {
+            return String.fromCharCode(...passwordArray);
+        }
+
+        document.getElementById('submit-password').addEventListener('click', function() {
+            var password = document.getElementById('password-input').value;
+
+            if (password === getPassword()) {
+                showBirthdayPage();
+            } else {
+                alert('Ask college hoe lol ( I wont tell you, wait)');
+            }
+        });
+    </script>
+</body>
+</html>
